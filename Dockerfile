@@ -16,10 +16,11 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-RUN git clone git@github.com:harryhobbes/mtb-finder.git
-COPY mtb-finder/requirements.txt requirements.txt
+RUN apt-get -y update && apt-get -y install git
 
 WORKDIR /web
+
+RUN git clone https://github.com/harryhobbes/mtb-finder.git .
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
@@ -35,12 +36,9 @@ RUN adduser \
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# Leverage a bind mount to requirements.txt to avoid having to copy them into
-# into this layer.
 RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install --upgrade pip 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
 
 # Install Chromium. Could be a better way eg. Chromium docker container
@@ -61,9 +59,6 @@ RUN apt-get -y update && apt-get install -y google-chrome-stable
 
 # Switch to the non-privileged user to run the application.
 USER appuser
-
-# Copy the source code into the container.
-COPY mtb-finder/app/ ./app/
 
 # Expose the port that the application listens on.
 EXPOSE 80

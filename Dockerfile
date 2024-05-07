@@ -61,8 +61,7 @@ RUN apt-get -y update && apt-get install -y google-chrome-stable
 USER appuser
 
 # Expose the port that the application listens on.
-EXPOSE 80
+EXPOSE 9050
 
 # Run the application.
-#CMD flask --app __init__ run --port=5050
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "app.__init__:create_app()"]
+CMD ["gunicorn", "--bind", "0.0.0.0:9050", "app.__init__:create_app()"]

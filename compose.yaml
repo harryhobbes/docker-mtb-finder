@@ -14,8 +14,8 @@ services:
     ports:
       - 9050:9050
     volumes:
-      - ./instance:/web/instance
-      - ./userdata:/web/userdata
+      - ./instance:/web/mtb-finder/instance
+      - ./userdata:/web/mtb-finder/userdata
     environment:
       SLACK_API_KEY: ${SLACK_API_KEY}
 

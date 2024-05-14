@@ -18,8 +18,9 @@ ENV PYTHONUNBUFFERED=1
 
 RUN apt-get -y update && apt-get -y install git
 
-WORKDIR /web
+WORKDIR /web/mtb-finder
 
+ADD https://api.github.com/repos/harryhobbes/mtb-finder/git/refs/heads/main ../version.json
 RUN git clone https://github.com/harryhobbes/mtb-finder.git .
 
 # Create a non-privileged user that the app will run under.
@@ -28,7 +29,7 @@ ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
-    --home "/web/userdata" \
+    --home "/web/mtb-finder/userdata" \
     --shell "/sbin/nologin" \
     --no-create-home \
     --uid "${UID}" \
